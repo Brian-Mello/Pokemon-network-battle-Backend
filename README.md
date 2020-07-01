@@ -1,2 +1,2 @@
-# Pokemon-network-battle
+# Pokemon-network-battle(Backend)
 more information soon!
