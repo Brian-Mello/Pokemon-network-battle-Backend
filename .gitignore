@@ -3,3 +3,4 @@
 lambda.zip
 .env
 package-lock.json
+.gitignore
