@@ -11,8 +11,7 @@ export const signinEndpoint = async (req: Request, res: Response) => {
         const signinUc = new SigninUC( new UserDB(), new JwtAuthorizer(), new RefreshTokenDB(), new BcryptService());
 
         const result = await signinUc.execute({
-            email: req.body.email,
-            nickname: req.body.nickname,
+            emailOrnickname: req.body.emailOrnickname,
             password: req.body.password
         })
 

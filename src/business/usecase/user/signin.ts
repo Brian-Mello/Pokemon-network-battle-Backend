@@ -12,18 +12,13 @@ export class SigninUC {
 
     public async execute(input: SigninUCInput): Promise<SigninUCOutput>{
 
-        if(input.email && input.nickname){
+        if(!input.emailOrnickname){
             throw new Error("Just send an email or nickname!")
         }
 
-        const user = await this.userGateway.signin(input.email, input.nickname);
+        const user = await this.userGateway.signin(input.emailOrnickname);
 
-        let  emailOrNickname;
-        if(input.email){
-            emailOrNickname = input.email;
-        } else if(input.nickname){
-            emailOrNickname = input.nickname;
-        };
+        let  emailOrNickname = input.emailOrnickname;
 
         if(!user){
             throw new Error("User not found!");
@@ -35,7 +30,7 @@ export class SigninUC {
             throw new Error("Invalid password!");
         };
 
-        const accessToken = await this.authenticationGateway.generateToken({
+        const accessToken = this.authenticationGateway.generateToken({
             id: user.getId()
         }, process.env.ACCESS_TOKEN_TIME as string);
         
@@ -56,8 +51,6 @@ export class SigninUC {
             userId: user.getId()
         });
 
-
-
         return{
             message: `User ${emailOrNickname} logged successfully!`,
             accessToken: accessToken,
@@ -67,8 +60,7 @@ export class SigninUC {
 }
 
 export interface SigninUCInput {
-    email: string;
-    nickname: string;
+    emailOrnickname: string;
     password: string;
 }
 

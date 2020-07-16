@@ -35,11 +35,25 @@ export class UserDB extends BaseDB implements UserGateway{
         `);
     };
 
-    public async signin(email: string, nickname: string): Promise <User | undefined> {
+    public async signin(emailOrnickname: string): Promise <User | undefined> {
         const user = await this.connection.raw(`
             SELECT *
             FROM ${this.userTableName}
-            WHERE email = '${email}' OR nickname = '${nickname}' ;
+            WHERE email = '${emailOrnickname}' OR nickname = '${emailOrnickname}' ;
+        `);
+
+        if(!user[0][0]){
+            return undefined;
+        };
+
+        return this.mapUserToDB(user[0][0])
+    };
+
+    public async getUserByNicknameOrId(nicknameOrId: string): Promise <User | undefined> {
+        const user = await this.connection.raw(`
+            SELECT *
+            FROM ${this.userTableName}
+            WHERE nickname = '${nicknameOrId}' OR id = '${nicknameOrId}' ;
         `);
 
         if(!user[0][0]){
@@ -95,6 +109,22 @@ export class UserDB extends BaseDB implements UserGateway{
         await this.connection.raw(`
             UPDATE ${this.userTableName}
             SET password = '${password}'
+            WHERE id = '${id}'
+        `)
+    }
+
+    public async updatePhoto(id: string, photo: string): Promise<void>{
+        await this.connection.raw(`
+            UPDATE ${this.userTableName}
+            SET photo = '${photo}'
+            WHERE id = '${id}'
+        `)
+    }
+
+    public async updateNickname(id: string, nickname: string): Promise<void>{
+        await this.connection.raw(`
+            UPDATE ${this.userTableName}
+            SET nickname = '${nickname}'
             WHERE id = '${id}'
         `)
     }
